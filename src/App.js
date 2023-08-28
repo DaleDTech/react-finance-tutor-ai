@@ -1,9 +1,21 @@
+// const Answer = ({ answer }) => {
+//   var keyID = 0;
+//   return (
+//       <div>
+//           {answer.split('\n').map((paragraph) => (
+//               <p key={keyID++}>{paragraph}</p>
+//           ))}
+//           <br/>
+//       </div>
+//   );
+// };
+
 function App() {
 
-var innerAnswer = "Answer Goes here"
 const gptTrigger = async () => {
     const API_KEY = process.env.REACT_APP_SECRET_KEY;
-    var gptQuestion = "Explain Quant Trading to someone who knows math up to Calc 2";
+    // question to be an input on front end
+    var gptQuestion = "Explain the futures market to someone with a basic understanding of the stock market";
     const options = {
       method: "POST",
       headers: {
@@ -15,22 +27,26 @@ const gptTrigger = async () => {
         messages: [{ role: "user", content: gptQuestion }],
         max_tokens: 2000,
       })
-
     }
-
     try {
       const response = await fetch('https://api.openai.com/v1/chat/completions', options)
-      const data = await response.json()
-      console.log("Content Answer:")
-      console.log(data.choices[0].message.content)
-      document.getElementById("answerDiv").innerHTML = data.choices[0].message.content;
+     
+      const data = await response.json();
+  
+      const innerAnswer = data.choices[0].message.content;
+      
+      console.log(innerAnswer);
+  
+      document.getElementById("answerDiv").innerText = innerAnswer;
+
     }
 
     catch (error){
       console.error(error)
+      document.getElementById("answerDiv").innerText = "No Answer found"
 
     }
-  };
+  }
 
   
   return (
@@ -39,8 +55,13 @@ const gptTrigger = async () => {
         
       </header>
     <button onClick={gptTrigger}> Finance App Button  </button>
+    
+  
+
+   
     <br />
     <p id="answerDiv" > answer goes here </p> 
+    
     </div>
   );
 }
